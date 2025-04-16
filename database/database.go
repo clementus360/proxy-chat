@@ -13,7 +13,7 @@ var DB *pgxpool.Pool
 
 func InitPostgres() {
 	config.LoadEnv()
-	dbURL := config.GetEnv("DATABASE_URL", "postgres://postgres:password@localhost:5432/proxy_chat")
+	dbURL := config.GetEnv("DATABASE_URL", "postgres://user:password@localhost:5432/proximity_chat")
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
