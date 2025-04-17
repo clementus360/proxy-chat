@@ -17,7 +17,7 @@ func RunMigrations() {
 			latitude DECIMAL(9,6),
 			longitude DECIMAL(9,6),
 			location GEOGRAPHY(POINT, 4326),
-			visible BOOLEAN DEFAULT FALSE,
+			visible BOOLEAN DEFAULT TRUE,
 			online BOOLEAN DEFAULT FALSE,
 			image_url VARCHAR(255),
 			last_active TIMESTAMP DEFAULT NOW(),
