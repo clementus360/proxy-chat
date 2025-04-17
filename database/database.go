@@ -20,6 +20,7 @@ func InitPostgres() {
 
 	maxRetries := 10
 	for i := 1; i <= maxRetries; i++ {
+		log.Println(dbURL)
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()
 
