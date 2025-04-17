@@ -9,28 +9,24 @@ services:
       - postgres
       - redis
     environment:
-      - DATABASE_URL=postgres://user:password@postgres:5432/proximity_chat
+      - DATABASE_URL=postgres://user:password@postgres:5432/proximity_chat?sslmode=disable
       - REDIS_URL=redis:6379
       - REDIS_PASSWORD=
       - REDIS_DB=0
 
   postgres:
-    image: postgres:15
+    image: postgis/postgis:15-3.3 # ✅ Use PostGIS-enabled image
     restart: always
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: password
       POSTGRES_DB: proximity_chat
-    ports:
-      - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
 
   redis:
     image: redis:7
     restart: always
-    ports:
-      - "6379:6379"
     volumes:
       - redisdata:/data
 
