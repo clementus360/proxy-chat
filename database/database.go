@@ -15,15 +15,30 @@ func InitPostgres() {
 	config.LoadEnv()
 	dbURL := config.GetEnv("DATABASE_URL", "postgres://user:password@localhost:5432/proximity_chat")
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
+	var pool *pgxpool.Pool
+	var err error
 
-	pool, err := pgxpool.New(ctx, dbURL)
+	maxRetries := 10
+	for i := 1; i <= maxRetries; i++ {
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+
+		pool, err = pgxpool.New(ctx, dbURL)
+		if err == nil {
+			// Try to ping the DB to ensure it's ready
+			if err = pool.Ping(ctx); err == nil {
+				break
+			}
+		}
+
+		log.Printf("Attempt %d: Could not connect to Postgres. Retrying in 2s...\n", i)
+		time.Sleep(2 * time.Second)
+	}
+
 	if err != nil {
-		log.Fatalf("Unable to connect to database: %v\n", err)
+		log.Fatalf("Failed to connect to Postgres after %d attempts: %v", maxRetries, err)
 	}
 
 	DB = pool
-
-	log.Println("Connected to database")
+	log.Println("Connected to Postgres")
 }

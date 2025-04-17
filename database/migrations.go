@@ -59,6 +59,9 @@ func RunMigrations() {
 		);`,
 	}
 
+	DB.Exec(ctx, `CREATE EXTENSION IF NOT EXISTS postgis;`)
+	DB.Exec(ctx, `CREATE EXTENSION IF NOT EXISTS postgis_topology;`)
+
 	for _, query := range migrations {
 		_, err := DB.Exec(ctx, query)
 		if err != nil {
