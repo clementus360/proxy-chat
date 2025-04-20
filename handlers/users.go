@@ -204,13 +204,15 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Ensure location is valid and create a point from latitude and longitude
-	if latitude, exists := updates["latitude"]; exists {
-		if longitude, exists := updates["longitude"]; exists {
-			location := fmt.Sprintf("POINT(%f %f)", longitude, latitude)
+	if lat, exists := updates["latitude"].(float64); exists {
+		if lng, exists := updates["longitude"].(float64); exists {
+			location := fmt.Sprintf("POINT(%f %f)", lng, lat)
 			queryParts = append(queryParts, fmt.Sprintf("location = ST_GeographyFromText($%d)", argIndex))
 			queryParams = append(queryParams, location)
 			argIndex++
 		}
+
+		log.Println("Location updated:", updates["latitude"], updates["longitude"])
 	}
 
 	// if no updatable fields are provided
