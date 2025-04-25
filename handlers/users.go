@@ -227,9 +227,6 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 
 	queryParams = append(queryParams, userID)
 
-	fmt.Println(query)
-	fmt.Println(queryParams)
-
 	// Update user in database
 	var user models.User
 	err = database.DB.QueryRow(r.Context(), query, queryParams...).Scan(&user.ID, &user.Username, &user.Image_url, &user.Visible, &user.LastActive, &user.CreatedAt)
@@ -238,6 +235,8 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 		log.Println("Error updating user:", err)
 		return
 	}
+
+	log.Println("User updated:", user)
 
 	// Send response
 	w.Header().Set("Content-Type", "application/json")
