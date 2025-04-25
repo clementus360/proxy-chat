@@ -223,13 +223,13 @@ func UpdateUser(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Finalize query string
-	query := fmt.Sprintf(`UPDATE users SET %s WHERE id = $%d RETURNING id, username, image_url, visible, last_active, created_at;`, strings.Join(queryParts, ", "), argIndex)
+	query := fmt.Sprintf(`UPDATE users SET %s WHERE id = $%d RETURNING id, username, image_url, longitude, latitude, visible, last_active, created_at;`, strings.Join(queryParts, ", "), argIndex)
 
 	queryParams = append(queryParams, userID)
 
 	// Update user in database
 	var user models.User
-	err = database.DB.QueryRow(r.Context(), query, queryParams...).Scan(&user.ID, &user.Username, &user.Image_url, &user.Visible, &user.LastActive, &user.CreatedAt)
+	err = database.DB.QueryRow(r.Context(), query, queryParams...).Scan(&user.ID, &user.Username, &user.Image_url, &user.Longitude, &user.Latitude, &user.Visible, &user.LastActive, &user.CreatedAt)
 	if err != nil {
 		http.Error(w, "Unable to update user", http.StatusInternalServerError)
 		log.Println("Error updating user:", err)
